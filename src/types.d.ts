@@ -10,6 +10,7 @@ interface CreepMemory {
     needEnergy?: boolean;
     pauseRole?: boolean;
     target?: string;
+    mineralType?: ResourceConstant;
 }
 
 interface Room {
