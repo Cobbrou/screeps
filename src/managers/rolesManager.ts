@@ -5,15 +5,17 @@ export enum Role {
     CARRIER = "CARRIER",
     UPGRADER = "UPGRADER",
     REPAIRER = "REPAIRER",
-    BUILDER = "BUILDER"
+    BUILDER = "BUILDER",
+    EXTRACTOR = "EXTRACTOR"
 }
 
 export const RoleTasks: Record<string, string[][]> = {
     [Role.HARVESTER]:   [[Task.HARVEST]],
-    [Role.CARRIER]:     [[Task.CARRY], [Task.STORE, Task.SPREAD_ENERGY]],
+    [Role.CARRIER]:     [[Task.CARRY], [Task.STORE, Task.SPREAD_ENERGY], [Task.SPREAD_ENERGY]],
     [Role.UPGRADER]:    [[Task.UPGRADE]],
     [Role.REPAIRER]:    [[Task.REPAIR, Task.BUILD]],
-    [Role.BUILDER]:     [[Task.BUILD, Task.REPAIR]]
+    [Role.BUILDER]:     [[Task.BUILD, Task.REPAIR]],
+    [Role.EXTRACTOR]:   [[Task.EXTRACT]]
 }
 
 export const RoleBodyParts: Record<Role, Record<string, number>> = {
@@ -21,7 +23,8 @@ export const RoleBodyParts: Record<Role, Record<string, number>> = {
   [Role.CARRIER]:     {[MOVE]: 0.4, [CARRY]: 0.5, [WORK]: 0.1},
   [Role.UPGRADER]:    {[MOVE]: 0.1, [CARRY]: 0.4, [WORK]: 0.5},
   [Role.REPAIRER]:    {[MOVE]: 0.3, [CARRY]: 0.3, [WORK]: 0.4},
-  [Role.BUILDER]:     {[MOVE]: 0.3, [CARRY]: 0.3, [WORK]: 0.4}
+  [Role.BUILDER]:     {[MOVE]: 0.3, [CARRY]: 0.3, [WORK]: 0.4},
+  [Role.EXTRACTOR]:   {[MOVE]: 0.1, [CARRY]: 0.1, [WORK]: 0.8}
 }
 
 export function run(creep: Creep): void {
@@ -61,7 +64,7 @@ export function run(creep: Creep): void {
             creep.memory.task = creepTasks[creep.memory.taskIndex][0];
             break;
         case TaskStatus.FAILED:
-            let nextSubTaskIndex = _.indexOf(creepTasks[creep.memory.taskIndex], creep.memory.task)+1;
+            let nextSubTaskIndex = Object.values(creepTasks[creep.memory.taskIndex]).indexOf(creep.memory.task)+1;
             if (!creepTasks[creep.memory.taskIndex][nextSubTaskIndex]) nextSubTaskIndex = 0;
             creep.memory.task = creepTasks[creep.memory.taskIndex][nextSubTaskIndex]
             break;
